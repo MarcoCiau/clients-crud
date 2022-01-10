@@ -1,9 +1,10 @@
-import "./App.css";
-
+import Navbar  from "./components/ui/Navbar";
+import Client  from "./components/client/Client";
 function App() {
   return (
-    <div className="App">
-      <h1>Hello</h1>
+    <div>
+      <Navbar />
+      <Client />
     </div>
   );
 }
