@@ -1,13 +1,18 @@
 import Container from "react-bootstrap/Container";
 import Button from "react-bootstrap/Button";
-const ClientsList = ({ clientList }) => {
+import AddClient from "./AddClient";
+
+const ClientsList = ({ clientList, handleEdit, handleDelete }) => {
   const editClient = (id) => {
     console.log("update", id);
+    handleEdit(id);
   }
 
   const deleteClient = (id) => {
     console.log("delete", id);
+    handleDelete(id);
   }
+
   return (
     <Container fluid="md">
       <table className="table">
@@ -22,14 +27,15 @@ const ClientsList = ({ clientList }) => {
         </thead>
         <tbody>
           {clientList.map((user, index) => (
-            <tr key={user.name}>
+            <tr key={user._id}>
               <th scope="row">{index + 1}</th>
               <td>{user.name}</td>
               <td>{user.company}</td>
               <td>{user.email}</td>
               <td>
-                <Button className="btn-primary" onClick={() => {editClient(index)}} >Edit...</Button>{" "}
-                <Button className="btn-danger"  onClick={() => {deleteClient(index)}} >Delete</Button>
+                {/* <Button className="btn-primary" onClick={() => {editClient(user._id)}} >Edit...</Button>{" "} */}
+                <AddClient btnTitle="Edit..." addNewClient={editClient} />{" "}
+                <Button className="btn-danger"  onClick={() => {deleteClient(user._id)}} >Delete</Button>
               </td>
             </tr>
           ))}

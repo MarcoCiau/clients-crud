@@ -66,7 +66,7 @@ const AddClient = (props) => {
     <Container fluid="md">
       <div className="d-flex flex-row-reverse m-4">
         <Button variant="primary" onClick={handleShow}>
-          Add User
+          {props.btnTitle}
         </Button>
       </div>
       <ClientModal enable={show} closeFnc={handleClose} saveFnc={handleSave}>

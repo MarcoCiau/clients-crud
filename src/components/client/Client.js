@@ -1,55 +1,69 @@
-import { useState } from "react";
+import axios from "axios";
+import { useState, useEffect } from "react";
 import AddClient from "./AddClient";
 import ClientsList from "./ClientsList";
-const defaultClients = [
-  {
-    name: "user1",
-    company: "company1",
-    rfc: "rfc1",
-    email: "email1",
-    phone: "phone1",
-  },
-  {
-    name: "user2",
-    company: "company2",
-    rfc: "rfc2",
-    email: "email2",
-    phone: "phone2",
-  },
-  {
-    name: "user3",
-    company: "company3",
-    rfc: "rfc3",
-    email: "email3",
-    phone: "phone3",
-  },
-  {
-    name: "user4",
-    company: "company4",
-    rfc: "rfc4",
-    email: "email4",
-    phone: "phone4",
-  },
-  {
-    name: "user5",
-    company: "company5",
-    rfc: "rfc5",
-    email: "email5",
-    phone: "phone5",
-  },
-];
+
 const Client = () => {
-  const [clients, setClients] = useState(defaultClients);
+  const apiURl  = "http://192.168.1.108:4000/api/v1/client/";
+
+  const [clients, setClients] = useState([]);
+
   const addNewClient = (client) => {
     const isEmpty = Object.values(client).every((x) => x === null || x === "");
     if (isEmpty) console.log("Invalid Value");
-    else console.log(client);
-    setClients([...clients, client]);
+    else {
+      console.log(client);
+      clientsPost(client);
+    }
   };
+
+  //api methods
+  const clientsGet = async () => {
+    const response = await axios.get(apiURl);
+    console.log(response.data.clients);
+    setClients(response.data.clients);
+  };
+
+  const clientsPost = async (payload) => {
+    const response = await axios.post(
+      apiURl,
+      payload
+    );
+    if (response.status === 200) {
+      await clientsGet();
+    }
+  };
+  
+  const clientsUpdate = async (payload) => {
+    console.log("clientsUpdateHandler");
+    return;
+    const response = await axios.put(
+      apiURl,
+      payload
+    );
+    if (response.status === 200) {
+      await clientsGet();
+    }
+  };
+
+  const clientsDelete = async (id = "") => {
+    const response = await axios.delete(
+      `${apiURl}${id}`
+    );
+    console.log(response);
+    if (response.status === 200) {
+      await clientsGet();
+    }
+  };
+
+  useEffect(() => {
+    clientsGet();
+  }, []);
+
   return (
     <div>
-      <AddClient addNewClient={addNewClient} />
-      <ClientsList clientList={clients} />
+      <AddClient btnTitle="Add User" addNewClient={addNewClient} />
+      <ClientsList handleEdit={clientsUpdate} handleDelete={clientsDelete} clientList={clients} />
     </div>
   );
 };
